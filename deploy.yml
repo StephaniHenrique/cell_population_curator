@@ -1,39 +1,48 @@
-name: Deploy React Vite
+name: Deploy React Vite Nativo
 
 on:
   push:
-    branches: ["main"] # Dispara o deploy quando vai para a main
+    branches: ["main"]
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do codigo
         uses: actions/checkout@v4
 
-      - name: Instalar o Node.js
+      - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          cache-dependency-path: cell-population-curator/package-lock.json
 
-      - name: Instalar Dependencias
+      - name: Instalar dependencias
         run: |
-          cd cell-population-curator
+          cd NOME_DA_cell-population-curator
           npm install
 
-      - name: Gerar o Build do Vite
+      - name: Build do Vite
         run: |
-          cd cell-population-curator
+          cd NOME_DA_cell-population-curator
           npm run build
 
-      - name: Fazer o Deploy para o GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload do resultado
+        uses: actions/upload-pages-artifact@v3
         with:
-          folder: cell-population-curator/dist # Pasta gerada pelo Vite
-          branch: gh-pages
+          path: 'NOME_DA_cell-population-curator/dist' # O Vite joga o site pronto na pasta dist
+
+      - name: Deploy para o GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
