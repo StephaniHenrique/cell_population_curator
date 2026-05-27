@@ -41,4 +41,5 @@ export default defineConfig({
       }
     }
   ],
+  base: '/cell_population_curator/',
 })

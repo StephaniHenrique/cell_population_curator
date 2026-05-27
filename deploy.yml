@@ -1,0 +1,39 @@
+name: Deploy React Vite
+
+on:
+  push:
+    branches: ["main"] # Dispara o deploy quando vai para a main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: cell-population-curator/package-lock.json
+
+      - name: Instalar Dependencias
+        run: |
+          cd cell-population-curator
+          npm install
+
+      - name: Gerar o Build do Vite
+        run: |
+          cd cell-population-curator
+          npm run build
+
+      - name: Fazer o Deploy para o GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: cell-population-curator/dist # Pasta gerada pelo Vite
+          branch: gh-pages
