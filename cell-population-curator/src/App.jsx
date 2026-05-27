@@ -95,7 +95,7 @@ export default function App() {
   };
 
   // 2. Salvar e atualizar no Google Sheets
-  const saveAndAdvance = async () => {
+  const saveAndAdvance = () => {
     let targetGroup = draftGroup;
 
     if (isCreatingNewGroup) {
@@ -119,23 +119,6 @@ export default function App() {
     // Atualização Otimista na UI (Atualiza a tela instantaneamente)
     setData(prev => prev.map(item => item.id === currentCard.id ? updatedItem : item));
 
-    // Enviar atualização para o Google Sheets de forma assíncrona
-    try {
-      await fetch(SHEETS_API_URL, {
-        method: 'POST', // Usamos POST para enviar dados para o Apps Script
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Apps Script lida melhor com text/plain em requests CORS
-        body: JSON.stringify({
-          action: 'UPDATE_ROW',
-          id: currentCard.id,
-          currentGroup: targetGroup,
-          status: newStatus
-        })
-      });
-    } catch (err) {
-      console.error("Failed to update Google Sheets:", err);
-      // Opcional: Reverter estado ou mostrar alerta em caso de falha
-    }
-
     setIsCreatingNewGroup(false);
     setNewGroupName('');
 
@@ -146,7 +129,23 @@ export default function App() {
         setCurrentIndex(prev => prev - 1);
       }
     }
+
+    // Enviar atualização para o Google Sheets de forma assíncrona
+    fetch(SHEETS_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'UPDATE_ROW',
+        id: currentCard.id,
+        currentGroup: targetGroup,
+        status: newStatus
+      })
+    }).catch(err => {
+      console.error("Failed to update Google Sheets:", err);
+    });
   };
+    
+
 
   if (error) {
     return (
