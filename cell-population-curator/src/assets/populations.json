@@ -1,142 +1,142 @@
 [
     {
         "id": 1,
-        "definicao": "manzana",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "apple",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 2,
-        "definicao": "banana",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "banana",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 3,
-        "definicao": "lechuga",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "lettuce",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 4,
-        "definicao": "perro",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "dog",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "confirmed"
     },
     {
         "id": 5,
-        "definicao": "gato",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "cat",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "confirmed"
     },
     {
         "id": 6,
-        "definicao": "zanahoria",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "carrot",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 7,
-        "definicao": "naranja",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "orange",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 8,
-        "definicao": "pollo",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "chicken",
+        "originalGroup": "animals",
+        "currentGroup": "test",
+        "status": "altered"
     },
     {
         "id": 9,
-        "definicao": "pepino",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "cucumber",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 10,
-        "definicao": "uva",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "grape",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 11,
-        "definicao": "conejo",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "rabbit",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "pending"
     },
     {
         "id": 12,
-        "definicao": "espinaca",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "spinach",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 13,
-        "definicao": "fresa",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "strawberry",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 14,
-        "definicao": "cerdo",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "pig",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "pending"
     },
     {
         "id": 15,
-        "definicao": "brocoli",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "broccoli",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 16,
-        "definicao": "melocoton",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "peach",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 17,
-        "definicao": "gallina",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "hen",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "pending"
     },
     {
         "id": 18,
-        "definicao": "calabaza",
-        "grupoOriginal": "verduras",
-        "grupoAtual": "verduras",
-        "status": "pendente"
+        "definition": "pumpkin",
+        "originalGroup": "vegetables",
+        "currentGroup": "vegetables",
+        "status": "pending"
     },
     {
         "id": 19,
-        "definicao": "pera",
-        "grupoOriginal": "frutas",
-        "grupoAtual": "frutas",
-        "status": "pendente"
+        "definition": "pear",
+        "originalGroup": "fruits",
+        "currentGroup": "fruits",
+        "status": "pending"
     },
     {
         "id": 20,
-        "definicao": "vaca",
-        "grupoOriginal": "animales",
-        "grupoAtual": "animales",
-        "status": "pendente"
+        "definition": "cow",
+        "originalGroup": "animals",
+        "currentGroup": "animals",
+        "status": "pending"
     }
 ]

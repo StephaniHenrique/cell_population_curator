@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "definition": "apple",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 2,
+    "definition": "banana",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 3,
+    "definition": "lettuce",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 4,
+    "definition": "dog",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 5,
+    "definition": "cat",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 6,
+    "definition": "carrot",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 7,
+    "definition": "orange",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 8,
+    "definition": "chicken",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 9,
+    "definition": "cucumber",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 10,
+    "definition": "grape",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 11,
+    "definition": "rabbit",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 12,
+    "definition": "spinach",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 13,
+    "definition": "strawberry",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 14,
+    "definition": "pig",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 15,
+    "definition": "broccoli",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 16,
+    "definition": "peach",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 17,
+    "definition": "hen",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  },
+  {
+    "id": 18,
+    "definition": "pumpkin",
+    "originalGroup": "vegetables",
+    "currentGroup": "vegetables",
+    "status": "pending"
+  },
+  {
+    "id": 19,
+    "definition": "pear",
+    "originalGroup": "fruits",
+    "currentGroup": "fruits",
+    "status": "pending"
+  },
+  {
+    "id": 20,
+    "definition": "cow",
+    "originalGroup": "animals",
+    "currentGroup": "animals",
+    "status": "pending"
+  }
+]

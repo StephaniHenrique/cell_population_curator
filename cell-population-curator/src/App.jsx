@@ -1,63 +1,55 @@
 import { useState, useEffect, useMemo } from 'react';
-import originalData from './assets/populations.json';
+
+// URL da sua API (Google Apps Script, SheetDB, etc)
+// Substitua por sua URL real após criar a API.
+const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbzvzLCqZWFA8UaGrDZ_5DYqwMZ4SrepTL-vZ3SAjCoPkbluTwq5a1fMbCo78b3MsVvt/exec'
 
 export default function App() {
   const [data, setData] = useState([]);
   const [view, setView] = useState('dashboard');
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [draftGroup, setDraftGroup] = useState('');
 
-  // Novos estados para a criação de grupo
   const [isCreatingNewGroup, setIsCreatingNewGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
 
-  // Load data
+  // 1. Carregar dados do Google Sheets
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('cell_curation_data');
-      if (saved) {
-        const parsedData = JSON.parse(saved);
+    const fetchSheetsData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(SHEETS_API_URL);
+        if (!response.ok) throw new Error("Failed to fetch data from Sheets");
+        
+        const parsedData = await response.json();
+        
         if (Array.isArray(parsedData) && parsedData.length > 0) {
           setData(parsedData);
-          return;
+        } else {
+          throw new Error("Data from Sheets is empty or not a valid array.");
         }
+      } catch (err) {
+        console.error("Error loading data:", err);
+        setError("Não foi possível carregar os dados da planilha. Verifique a conexão e a URL da API.");
+      } finally {
+        setIsLoading(false);
       }
-      if (Array.isArray(originalData)) {
-        setData(originalData);
-      } else {
-        throw new Error("The populations.json file is not a valid array.");
-      }
-    } catch (err) {
-      console.error("Error loading data:", err);
-      localStorage.removeItem('cell_curation_data');
-      setData(originalData);
-    }
+    };
+
+    fetchSheetsData();
   }, []);
 
-  // Save progress (Local & File via Vite API se configurado)
-  useEffect(() => {
-    if (Array.isArray(data) && data.length > 0) {
-      localStorage.setItem('cell_curation_data', JSON.stringify(data));
-
-      // Tentativa de salvar no arquivo real (falha silenciosamente se o plugin não estiver ativo)
-      fetch('/api/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data, null, 4)
-      }).catch(() => { });
-    }
-  }, [data]);
-
-  // Lista dinâmica de grupos (inclui originais + novos criados durante a sessão)
+  // Lista dinâmica de grupos
   const allGroups = useMemo(() => {
     if (!Array.isArray(data)) return [];
     const groups = new Set();
     data.forEach(item => {
-      groups.add(item.grupoOriginal);
-      groups.add(item.grupoAtual); // Adiciona os grupos criados na hora
+      if (item.originalGroup) groups.add(item.originalGroup);
+      if (item.currentGroup) groups.add(item.currentGroup);
     });
     return Array.from(groups).sort();
   }, [data]);
@@ -79,12 +71,12 @@ export default function App() {
     setView('review');
   };
 
-  const currentItems = data.filter(d => d.grupoAtual === selectedGroup);
+  const currentItems = data.filter(d => d.currentGroup === selectedGroup);
   const currentCard = currentItems[currentIndex];
 
   useEffect(() => {
     if (currentCard) {
-      setDraftGroup(currentCard.grupoAtual);
+      setDraftGroup(currentCard.currentGroup);
       setIsCreatingNewGroup(false);
       setNewGroupName('');
     }
@@ -102,8 +94,8 @@ export default function App() {
     }
   };
 
-  const saveAndAdvance = () => {
-    // Se estiver a criar um novo grupo, valida e usa o nome novo. Senão, usa o da combobox.
+  // 2. Salvar e atualizar no Google Sheets
+  const saveAndAdvance = async () => {
     let targetGroup = draftGroup;
 
     if (isCreatingNewGroup) {
@@ -116,17 +108,33 @@ export default function App() {
     }
 
     const isMovingToAnotherGroup = targetGroup !== selectedGroup;
+    const newStatus = targetGroup === currentCard.originalGroup ? 'confirmed' : 'altered';
 
-    setData(prev => prev.map(item => {
-      if (item.id === currentCard.id) {
-        return {
-          ...item,
-          grupoAtual: targetGroup,
-          status: targetGroup === item.grupoOriginal ? 'confirmed' : 'altered'
-        };
-      }
-      return item;
-    }));
+    const updatedItem = {
+      ...currentCard,
+      currentGroup: targetGroup,
+      status: newStatus
+    };
+
+    // Atualização Otimista na UI (Atualiza a tela instantaneamente)
+    setData(prev => prev.map(item => item.id === currentCard.id ? updatedItem : item));
+
+    // Enviar atualização para o Google Sheets de forma assíncrona
+    try {
+      await fetch(SHEETS_API_URL, {
+        method: 'POST', // Usamos POST para enviar dados para o Apps Script
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // Apps Script lida melhor com text/plain em requests CORS
+        body: JSON.stringify({
+          action: 'UPDATE_ROW',
+          id: currentCard.id,
+          currentGroup: targetGroup,
+          status: newStatus
+        })
+      });
+    } catch (err) {
+      console.error("Failed to update Google Sheets:", err);
+      // Opcional: Reverter estado ou mostrar alerta em caso de falha
+    }
 
     setIsCreatingNewGroup(false);
     setNewGroupName('');
@@ -151,30 +159,31 @@ export default function App() {
     );
   }
 
-  if (!data || data.length === 0) {
+  if (isLoading || !data || data.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <div className="animate-pulse text-2xl font-bold text-indigo-400">Loading data...</div>
+        <div className="animate-pulse text-2xl font-bold text-indigo-400">Loading data from Google Sheets...</div>
       </div>
     );
   }
 
   // ==========================================
-  // VIEW 1: DASHBOARD
+  // VIEW 1: DASHBOARD (Permanece igual)
   // ==========================================
   if (view === 'dashboard') {
     const groupsStats = allGroups.map(group => {
-      const items = data.filter(d => d.grupoAtual === group);
+      const items = data.filter(d => d.currentGroup === group);
       return {
         name: group,
         total: items.length,
-        pending: items.filter(d => d.status === 'pendente').length,
-        reviewed: items.filter(d => d.status !== 'pendente').length
+        pending: items.filter(d => d.status === 'pending').length,
+        reviewed: items.filter(d => d.status !== 'pending').length
       };
-    }).filter(g => g.total > 0 || data.some(d => d.grupoOriginal === g));
+    }).filter(g => g.total > 0 || data.some(d => d.originalGroup === g));
 
     return (
       <div className="min-h-screen bg-slate-100 py-10 px-4 sm:px-6 lg:px-8">
+        {/* ... (O RESTO DO DASHBOARD FICA EXATAMENTE IGUAL) ... */}
         <div className="max-w-7xl mx-auto">
           <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 border-b border-gray-300 pb-8 gap-6">
             <div>
@@ -230,9 +239,10 @@ export default function App() {
   }
 
   // ==========================================
-  // VIEW 2: FLASHCARD REVIEW
+  // VIEW 2: FLASHCARD REVIEW (Permanece quase igual)
   // ==========================================
   const renderGroupSelection = () => {
+    // ... (Permanece igual)
     if (isCreatingNewGroup) {
       return (
         <div className="flex gap-3">
@@ -275,6 +285,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-100 py-10 px-4 sm:px-6">
+      {/* ... (O RESTO DO REVIEW FICA EXATAMENTE IGUAL) ... */}
       <div className="max-w-4xl mx-auto flex flex-col h-full">
         <header className="mb-10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <button onClick={() => setView('dashboard')} className="text-indigo-700 hover:text-indigo-900 font-bold text-lg flex items-center gap-2 bg-indigo-100 hover:bg-indigo-200 px-6 py-3 rounded-xl transition w-full sm:w-auto justify-center">
@@ -309,14 +320,14 @@ export default function App() {
 
               <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 sm:p-12 mb-6 shadow-inner">
                 <p className="text-slate-800 font-medium text-2xl sm:text-3xl leading-relaxed break-words text-center">
-                  {currentCard.definicao}
+                  {currentCard.definition}
                 </p>
               </div>
 
-              {currentCard.grupoOriginal !== currentCard.grupoAtual && (
+              {currentCard.originalGroup !== currentCard.currentGroup && (
                 <div className="mb-6 text-center">
                   <span className="text-sm font-medium text-slate-500">Originally from: </span>
-                  <span className="text-sm font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-lg">{currentCard.grupoOriginal}</span>
+                  <span className="text-sm font-bold text-slate-700 bg-slate-100 px-3 py-1 rounded-lg">{currentCard.originalGroup}</span>
                 </div>
               )}
 
